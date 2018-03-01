@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Pok&eacute;mon</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src='http://code.jquery.com/jquery-1.10.2.min.js'></script> 
+	<script>
+		$(document).ready(function() {
+			for(var i=1; i < 152; i++)
+			{
+				$("#pokemon").append('<img src="http://pokeapi.co/media/sprites/pokemon/'+i+'.png" id="'+i+'">');
+			}
+
+			$("img").click(function() {
+				var pokenum = $(this).attr("id");
+				getPokemon(pokenum);
+			})
+
+			function getPokemon(pokenum)
+			{
+				console.log("You clicked! "+pokenum);
+				$("#infobox").html("<h1>Loading...</h1>");
+				$.get("https://pokeapi.co/api/v2/pokemon/"+pokenum+"/",function(res)
+				{
+					var s = `
+					<h1>`+res.name+`</h1>
+					<img src="`+res.sprites.front_default+`" id="avatar">
+					<h2>Types:</h1><ul>`;
+					for(var i=0; i<res.types.length; i++)
+					{
+						s += "<li>"+res.types[i].type.name+"</li>";
+					}
+					s += `</ul><h2>Height:</h1>`+res.height+`
+					<h2>Weight:</h1>`+res.weight;
+					console.log(s);
+					console.log(res);
+					$("#infobox").html(s);
+				}, "json")
+			}
+		});
+	</script>
+</head>
+<body>
+	<div id="pokemon">
+
+	</div>
+	<div id="infobox">
+	</div>
+</body>
+</html>
